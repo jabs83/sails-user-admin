@@ -7,6 +7,9 @@
  */
 
 module.exports = {
+  
+  //this property makes it so only the properties below are being saved to the db
+  schema: true,
 
   attributes: {
   	

@@ -18,9 +18,32 @@
 module.exports = {
     
   'new': function(req, res){
+  	//retrieve any errors
+  	res.locals.flash = _.clone(req.session.flash);
     res.view();
+    //rest the flash object to empty
+    req.session.flash = {};
   },
 
+  create: function(req, res, next) {
+  	User.create( req.params.all(), function userCreated(err,user){
+
+  		//handle errors and save
+  		if(err) {
+  			console.log(err);
+  			req.session.flash = {
+  				err:err
+  			}
+
+  			//redirect user back to signup
+  			return res.redirect('/user/new');
+  		}
+
+  		res.json(user);
+	    //rest the flash object to empty
+	    req.session.flash = {};
+  	});
+  },
 
   /**
    * Overrides for the settings in `config/controllers.js`
