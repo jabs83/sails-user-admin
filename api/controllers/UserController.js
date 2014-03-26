@@ -18,11 +18,7 @@
 module.exports = {
     
   'new': function(req, res){
-  	//retrieve any errors
-  	res.locals.flash = _.clone(req.session.flash);
     res.view();
-    //rest the flash object to empty
-    req.session.flash = {};
   },
 
   create: function(req, res, next) {
@@ -39,9 +35,21 @@ module.exports = {
   			return res.redirect('/user/new');
   		}
 
-  		res.json(user);
+  		//res.json(user);
+  		res.redirect('/user/show/'+user.id);
+
 	    //rest the flash object to empty
-	    req.session.flash = {};
+	    //req.session.flash = {};
+  	});
+  },
+
+  show: function(req, res, next) {
+  	User.findOne(req.param('id'), function foundUser (err, user) {
+  		if(err) return next(err);
+  		if(!user) return next();
+  		res.view({
+  			user:user
+  		});
   	});
   },
 
